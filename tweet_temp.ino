@@ -22,7 +22,7 @@ double Fahrenheit(double celsius)
 
 
 // Ethernet shield settings, devices MAC address
-byte mac[] = { 0x90, 0xA2, 0xDA, 0x0D, 0xD1, 0x4F };
+byte mac[] = { 0xAB, 0xCD, 0xEF, 0x01, 0x23, 0x45 };
 
 // Local port to listen for UDP packets
 unsigned int localPort = 8888;
@@ -49,7 +49,7 @@ EthernetUDP Udp;
 unsigned long ntpLastUpdate = 0;
 
 // Your token to tweet (get it from http://arduino-tweet.appspot.com/)
-Twitter twitter("1281246518-AgIZOCFVZ6U16IA2AgU7E3Xd1DV5scWklOTz9ik");
+Twitter twitter("");
 
 // Set the sensor up
 dht11 DHT11;
