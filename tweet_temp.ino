@@ -30,7 +30,7 @@ unsigned int localPort = 8888;
 // NTP server: time-a.timefreq.bldrdoc.gov
 IPAddress timeServer(132, 163, 4, 101);
 
-// NTP local offset (hours in seconds) set to EST by default
+// NTP local offset (hours in seconds) set to EDT by default
 const long timeZoneOffset = -14400L; 
 
 // NYTP Sync Interval
