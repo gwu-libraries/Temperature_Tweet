@@ -20,7 +20,7 @@ double Fahrenheit(double celsius)
 //  return (celsius * 18 + 5)/10 + 32;
 //}
 
-
+// Configure ethernet shield network settings ie: DHCP or static IP
 // Ethernet shield MAC address setting
 byte mac[] = { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF };
 
@@ -61,9 +61,9 @@ void setup()
   // Open a serial port and wait for it to be ready  
   Serial.begin(9600);
   delay(5000);
-  // Setup ethernet access  
+  // Setup ethernet access (MAC address is all that is neccesary if using DHCP)
   Ethernet.begin(mac);
-   // Try to get the date and time
+   // Try to get the date and time from NTP server
    int trys=0;
    while(!getTimeAndDate() && trys<10) {
      trys++;
@@ -108,7 +108,7 @@ unsigned long sendNTPpacket(IPAddress& address)
   Udp.endPacket();
 }
 
-// Clock display of the time and date (Basic). Format: MM/DD/YY - H:MM:SS
+// Clock display of the time and date (Default output 24H MM/DD/YY - HH:MM:SS)
 void clockDisplay(){
   Serial.print(month());
   Serial.print("/");
@@ -142,7 +142,7 @@ void loop()
     }
   }
    
-  // Display the date & time
+  // Display current date & time
   clockDisplay();  
 
   // Verify the sensor is reading correctly
@@ -164,12 +164,14 @@ void loop()
 		break;
   }
   
+  // Display current temperature and humidity
   Serial.print("Temperature (oF): ");
   Serial.println(Fahrenheit(DHT11.temperature), 2);
   
   Serial.print("Humidity (%): ");
   Serial.println((float)DHT11.humidity, 2);
   
+  // Build the tweet
   String message;
   int temp;
   int months;
@@ -208,7 +210,7 @@ void loop()
   message += " degrees Fahrenheit with " + String(DHT11.humidity);
   message += " percent humidity. -- ";
   
-  // Add leading "0" to all hours between midnight and noon
+  // Add leading "0" to all hours between 1am-9am & 1pm-9pm
   if (hour() - 12 < 12){
     message += String("0") + String(hours) + String(":");
   }
@@ -248,7 +250,7 @@ void tweet(String message)
     }
   } else {
     Serial.println("Connect to Twitter: Failed.");
-    // Added a retry if connection fails (Default 3 mintues)
+    // Retry if connection fails (Default 3 mintues)
     Serial.println("Connect to Twitter: Retrying in 3 minutes.");
     delay(180000);
     if (twitter.post(msg)) {
