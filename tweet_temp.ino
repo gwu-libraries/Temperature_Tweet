@@ -11,7 +11,7 @@
 // Celsius to Fahrenheit conversion
 double Fahrenheit(double celsius)
 {
-  return 1.8 * celsius + 32;
+	return 1.8 * celsius + 32;
 }
 
 // Fast integer version with rounding
@@ -22,7 +22,7 @@ double Fahrenheit(double celsius)
 
 
 // Ethernet shield settings, devices MAC address
-byte mac[] = { 0xAB, 0xCD, 0xEF, 0x01, 0x23, 0x45 };
+byte mac[] = { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF };
 
 // Local port to listen for UDP packets
 unsigned int localPort = 8888;
@@ -135,10 +135,10 @@ void loop()
       trys++;
     }
     if(trys<10){
-      Serial.println("ntp server update success");
+      Serial.println("NTP server update: Success.");
     }
     else{
-      Serial.println("ntp server update failed");
+      Serial.println("NTP server update: Failed.");
     }
   }
    
@@ -151,16 +151,16 @@ void loop()
   switch (chk)
   {
     case DHTLIB_OK: 
-		Serial.println("OK"); 
+		Serial.println("Success."); 
 		break;
     case DHTLIB_ERROR_CHECKSUM: 
-		Serial.println("Checksum error"); 
+		Serial.println("Checksum error."); 
 		break;
     case DHTLIB_ERROR_TIMEOUT: 
-		Serial.println("Time out error"); 
+		Serial.println("Time out error."); 
 		break;
     default: 
-		Serial.println("Unknown error"); 
+		Serial.println("Unknown error."); 
 		break;
   }
   
@@ -228,8 +228,8 @@ void loop()
   Serial.println(message);
  
 tweet(message);
-  //Specify time between tweets
-  delay(7200000);
+  //Specify time between tweets (Default 1 hour)
+  delay(3600000);
 }
 
 // Send a tweet
@@ -237,18 +237,28 @@ void tweet(String message)
 {
   char msg[140] = "";
   message.toCharArray(msg, 140);
-  Serial.println("connecting ...");
+  Serial.println("Connecting to Twitter ...");
   if (twitter.post(msg)) {
     int status = twitter.wait();
     if (status == 200) {
-      Serial.println("OK.");
+      Serial.println("Post Tweet: Success.");
     } else {
-      Serial.print("failed : code ");
+      Serial.print("Post Tweet: Failed - code ");
       Serial.println(status);
     }
   } else {
-    Serial.println("connection failed.");
-    delay(60000);
-    twitter.post(msg);
+    Serial.println("Connect to Twitter: Failed.");
+    // Added a retry if connection fails (Default 3 mintues)
+    Serial.println("Connect to Twitter: Retrying in 3 minutes.");
+    delay(180000);
+    if (twitter.post(msg)) {
+      int status = twitter.wait();
+      if (status == 200) {
+        Serial.println("Post Tweet: Success.");
+      } else {
+        Serial.print("Post Tweet: Failed - code ");
+        Serial.println(status);
+      }
+    }  
   }
 }
