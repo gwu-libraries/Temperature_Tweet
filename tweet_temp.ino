@@ -21,7 +21,7 @@ double Fahrenheit(double celsius)
 //}
 
 
-// Ethernet shield settings, devices MAC address
+// Ethernet shield MAC address setting
 byte mac[] = { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF };
 
 // Local port to listen for UDP packets
@@ -33,7 +33,7 @@ IPAddress timeServer(132, 163, 4, 101);
 // NTP local offset (hours in seconds) set to EDT by default
 const long timeZoneOffset = -14400L; 
 
-// NYTP Sync Interval
+// NTP sync interval
 unsigned int ntpSyncTime = 15;  
 
 // NTP time stamp is in the first 48 bytes of the message
