@@ -210,19 +210,22 @@ void loop()
   message += " degrees Fahrenheit with " + String(DHT11.humidity);
   message += " percent humidity. -- ";
   
-  // Add leading "0" to all hours between 1am-9am & 1pm-9pm
-  if (hour() - 12 < 12){
-    message += String("0") + String(hours) + String(":");
+  // Add leading "0" to all hours between 1am-9am, 1pm-9pm, and convert 24:00 to 12:00
+  if (hour() = 00){
+	message += String("12:");
+	} else {
+		if (hour() - 12 < 10){
+		message += String("0") + String(hours) + String(":");
+	} else {
+		message += String(hours) + String(":");
+	}
   }
-  else{
-    message += String(hours) + String(":");
-  }
+
   // Add leading "0" to all minutes between 0-10
   if (minute() < 10){
     message += String("0") + String(minutes);
-  }
-  else{
-    message += String(minutes);
+    } else {
+		message += String(minutes);
   }
   
   message += String(ampm) + " " + String(months) + "/" + String(dates) + "/" + String(years);
