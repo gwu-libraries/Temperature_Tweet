@@ -250,7 +250,7 @@ void tweet(String message) {
                          		Serial.print("Connecting to Twitter failed: Error - ");
                               		Serial.println(status);                          
     		            	} 
-                         Serial.println("Unable to connect to Twitter.");
+                        Serial.println("Unable to connect to Twitter.");
                 	}
       		}
 	}
