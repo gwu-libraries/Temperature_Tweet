@@ -202,7 +202,7 @@ void loop() {
 	message += " percent humidity. -- ";
   
 	// Add leading "0" to all hours between 1am-9am, 1pm-9pm, and convert 24:00 to 12:00
-	if (hour() = 00) {
+	if (hour() == 00) {
 		message += String("12:");
 	} else {
 		if (hour() - 12 < 10) {
