@@ -201,15 +201,11 @@ void loop() {
 	message += " degrees Fahrenheit with " + String(DHT11.humidity);
 	message += " percent humidity. -- ";
   
-	// Add leading "0" to all hours between 1am-9am, 1pm-9pm, and convert 24:00 to 12:00
+	// Convert 24:00 to 12:00
 	if (hour() == 00) {
 		message += String("12:");
 	} else {
-		if (hour() - 12 < 10) {
-			message += String("0") + String(hours) + String(":");
-		} else {
-			message += String(hours) + String(":");
-		}
+		message += String(hours) + String(":");
 	}
 
 	// Add leading "0" to all minutes between 0-10
@@ -233,29 +229,29 @@ void loop() {
 void tweet(String message) {
 	char msg[140] = "";
 	message.toCharArray(msg, 140);
-	Serial.println("Connecting to Twitter ...");
+	Serial.println("Connecting to Twitter...");
 	if (twitter.post(msg)) {
 		int status = twitter.wait();
 		if (status == 200) {
-			Serial.println("Post Tweet: Success.");
+			Serial.println("Post tweet: Success.");
 		} else {
-			Serial.print("Post Tweet: Failed - code ");
-			Serial.println(status);
-		}
-	} else {
-		Serial.println("Connect to Twitter: Failed.");
-	
-		// Retry if connection fails (Default 3 mintues)
-		Serial.println("Connect to Twitter: Retrying in 3 minutes.");
-		delay(180000);
-		if (twitter.post(msg)) {
-			int status = twitter.wait();
-			if (status == 200) {
-				Serial.println("Post Tweet: Success.");
-			} else {
-				Serial.print("Post Tweet: Failed - code ");
-				Serial.println(status);
-			}
-		}  
+			// If failed to connect or post retry every 60 seconds
+                        int status = 0;
+                        for (int status = 0; status != 200;) {
+                        	Serial.println("Retrying connection to Twitter...");
+                        	delay(6000);
+                        	Serial.println("Connecting to Twitter...");
+                        	twitter.post(msg);
+                        	int status = twitter.wait();
+                          	if (status = 200) {
+                            		Serial.println("Post tweet: Success.");
+					break;
+                         	} else {
+                         		Serial.print("Connecting to Twitter failed: Error - ");
+                              		Serial.println(status);                          
+    		            	} 
+                         Serial.println("Unable to connect to Twitter.");
+                	}
+      		}
 	}
-}
+}   
