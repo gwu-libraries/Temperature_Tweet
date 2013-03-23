@@ -15,7 +15,7 @@ double Fahrenheit(double celsius) {
 
 // Fast integer version with rounding
 // int Celcius2Fahrenheit(int celcius) {
-//  return (celsius * 18 + 5)/10 + 32;
+//	return (celsius * 18 + 5)/10 + 32;
 //}
 
 // Configure ethernet shield network settings ie: DHCP or static IP
@@ -54,208 +54,208 @@ dht11 DHT11;
 #define DHT11PIN 2
 
 void setup() {
-  int i = 0;
-  // Open a serial port and wait for it to be ready  
-  Serial.begin(9600);
-  delay(5000);
-  // Setup ethernet access (MAC address is all that is neccesary if using DHCP)
-  Ethernet.begin(mac);
-  // Try to get the date and time from NTP server
-  int trys=0;
-  while(!getTimeAndDate() && trys<10) {
-	trys++;
-  }
+	int i = 0;
+	// Open a serial port and wait for it to be ready  
+	Serial.begin(9600);
+	delay(5000);
+	// Setup ethernet access (MAC address is all that is neccesary if using DHCP)
+	Ethernet.begin(mac);
+	// Try to get the date and time from NTP server
+	int trys=0;
+	while(!getTimeAndDate() && trys<10) {
+		trys++;
+	}
 }
 
 // Do not alter this function, it is used by the system
 int getTimeAndDate() {
-   int flag=0;
-   Udp.begin(localPort);
-   sendNTPpacket(timeServer);
-   delay(1000);
-   if (Udp.parsePacket()) {
-     // Read the packet into the buffer
-     Udp.read(packetBuffer,NTP_PACKET_SIZE);
-     unsigned long highWord, lowWord, epoch;
-     highWord = word(packetBuffer[40], packetBuffer[41]);
-     lowWord = word(packetBuffer[42], packetBuffer[43]);  
-     epoch = highWord << 16 | lowWord;
-     epoch = epoch - 2208988800 + timeZoneOffset;
-     flag=1;
-     setTime(epoch);
-     ntpLastUpdate = now();
-   }
-   return flag;
+	int flag=0;
+	Udp.begin(localPort);
+	sendNTPpacket(timeServer);
+	delay(1000);
+	if (Udp.parsePacket()) {
+		// Read the packet into the buffer
+		Udp.read(packetBuffer,NTP_PACKET_SIZE);
+		unsigned long highWord, lowWord, epoch;
+		highWord = word(packetBuffer[40], packetBuffer[41]);
+		lowWord = word(packetBuffer[42], packetBuffer[43]);  
+		epoch = highWord << 16 | lowWord;
+		epoch = epoch - 2208988800 + timeZoneOffset;
+		flag=1;
+		setTime(epoch);
+		ntpLastUpdate = now();
+	}
+	return flag;
 }
 
 // Do not alter this function, it is used by the system
 unsigned long sendNTPpacket(IPAddress& address) {
-  memset(packetBuffer, 0, NTP_PACKET_SIZE);
-  packetBuffer[0] = 0b11100011;
-  packetBuffer[1] = 0;
-  packetBuffer[2] = 6;
-  packetBuffer[3] = 0xEC;
-  packetBuffer[12]  = 49;
-  packetBuffer[13]  = 0x4E;
-  packetBuffer[14]  = 49;
-  packetBuffer[15]  = 52;                  
-  Udp.beginPacket(address, 123);
-  Udp.write(packetBuffer,NTP_PACKET_SIZE);
-  Udp.endPacket();
+	memset(packetBuffer, 0, NTP_PACKET_SIZE);
+	packetBuffer[0] = 0b11100011;
+	packetBuffer[1] = 0;
+	packetBuffer[2] = 6;
+	packetBuffer[3] = 0xEC;
+	packetBuffer[12]  = 49;
+	packetBuffer[13]  = 0x4E;
+	packetBuffer[14]  = 49;
+	packetBuffer[15]  = 52;                  
+	Udp.beginPacket(address, 123);
+	Udp.write(packetBuffer,NTP_PACKET_SIZE);
+	Udp.endPacket();
 }
 
 // Clock display of the time and date (Default output 24H MM/DD/YY - HH:MM:SS)
 void clockDisplay() {
-  Serial.print(month());
-  Serial.print("/");
-  Serial.print(day());
-  Serial.print("/");
-  Serial.print(year());
-  Serial.print(" - ");
-  Serial.print(hour());
-  Serial.print(":");
-  Serial.print(minute());
-  Serial.print(":");
-  Serial.print(second());
-  Serial.println();
+	Serial.print(month());
+	Serial.print("/");
+	Serial.print(day());
+	Serial.print("/");
+	Serial.print(year());
+	Serial.print(" - ");
+	Serial.print(hour());
+	Serial.print(":");
+	Serial.print(minute());
+	Serial.print(":");
+	Serial.print(second());
+	Serial.println();
 }
 
 void loop() {
-  Serial.println("\n");
+	Serial.println("\n");
 
-  // Update the time via NTP server as often as the time you set at the top
-  if(now()-ntpLastUpdate > ntpSyncTime) {
-    int trys=0;
-    while(!getTimeAndDate() && trys<10) {
-      trys++;
-    }
-    if(trys<10) {
-      Serial.println("NTP server update: Success.");
-    } else {
-      Serial.println("NTP server update: Failed.");
-    }
-  }
+	// Update the time via NTP server as often as the time you set at the top
+	if(now()-ntpLastUpdate > ntpSyncTime) {
+		int trys=0;
+		while(!getTimeAndDate() && trys<10) {
+			trys++;
+		}
+		if(trys<10) {
+			Serial.println("NTP server update: Success.");
+		} else {
+			Serial.println("NTP server update: Failed.");
+		}
+	}
    
-  // Display current date & time
-  clockDisplay();  
+	// Display current date & time
+	clockDisplay();  
 
-  // Verify the sensor is reading correctly
-  int chk = DHT11.read(DHT11PIN);
-  Serial.print("Reading sensor: ");
-  switch (chk) {
-    case DHTLIB_OK: 
-	Serial.println("Success."); 
-	break;
-    case DHTLIB_ERROR_CHECKSUM: 
-	Serial.println("Checksum error."); 
-	break;
-    case DHTLIB_ERROR_TIMEOUT: 
-	Serial.println("Time out error."); 
-	break;
-    default: 
-	Serial.println("Unknown error."); 
-	break;
-  }
+	// Verify the sensor is reading correctly
+	int chk = DHT11.read(DHT11PIN);
+	Serial.print("Reading sensor: ");
+	switch (chk) {
+		case DHTLIB_OK: 
+		Serial.println("Success."); 
+		break;
+		case DHTLIB_ERROR_CHECKSUM: 
+		Serial.println("Checksum error."); 
+		break;
+		case DHTLIB_ERROR_TIMEOUT: 
+		Serial.println("Time out error."); 
+		break;
+		default: 
+		Serial.println("Unknown error."); 
+		break;
+	}
   
-  // Display current temperature and humidity
-  Serial.print("Temperature (oF): ");
-  Serial.println(Fahrenheit(DHT11.temperature), 2);
+	// Display current temperature and humidity
+	Serial.print("Temperature (oF): ");
+	Serial.println(Fahrenheit(DHT11.temperature), 2);
   
-  Serial.print("Humidity (%): ");
-  Serial.println((float)DHT11.humidity, 2);
+	Serial.print("Humidity (%): ");
+	Serial.println((float)DHT11.humidity, 2);
   
-  // Build the tweet
-  String message;
-  int temp;
-  int months;
-  int dates;
-  int years;
-  int hours;
-  int minutes;
-  int seconds;
-  String ampm;
+	// Build the tweet
+	String message;
+	int temp;
+	int months;
+	int dates;
+	int years;
+	int hours;
+	int minutes;
+	int seconds;
+	String ampm;
   
-  temp = Fahrenheit(DHT11.temperature);
-  months = month();
-  dates = day();
-  years = year();
-  minutes = minute();
-  seconds = second();
+	temp = Fahrenheit(DHT11.temperature);
+	months = month();
+	dates = day();
+	years = year();
+	minutes = minute();
+	seconds = second();
   
-  // Adjust hours to 12h format
-  if(hour() > 12) {
-    hours = hour()-12;
-  } else {
-    hours = hour();
-  }
+	// Adjust hours to 12h format
+	if(hour() > 12) {
+		hours = hour()-12;
+	} else {
+		hours = hour();
+	}
  
-  // Set AM or PM
-  if (hour() - 12 >= 0) {
-    ampm = "pm";
-  } else {
-    ampm = "am";
-  }
+	// Set AM or PM
+	if (hour() - 12 >= 0) {
+		ampm = "pm";
+	} else {
+		ampm = "am";
+	}
   
-  // Compose the message
-  message = "The Gelman Library sixth floor is currently: " + String(temp); 
-  message += " degrees Fahrenheit with " + String(DHT11.humidity);
-  message += " percent humidity. -- ";
+	// Compose the message
+	message = "The Gelman Library sixth floor is currently: " + String(temp); 
+	message += " degrees Fahrenheit with " + String(DHT11.humidity);
+	message += " percent humidity. -- ";
   
-  // Add leading "0" to all hours between 1am-9am, 1pm-9pm, and convert 24:00 to 12:00
-  if (hour() = 00) {
-	message += String("12:");
+	// Add leading "0" to all hours between 1am-9am, 1pm-9pm, and convert 24:00 to 12:00
+	if (hour() = 00) {
+		message += String("12:");
 	} else {
 		if (hour() - 12 < 10) {
-		message += String("0") + String(hours) + String(":");
-	} else {
-		message += String(hours) + String(":");
+			message += String("0") + String(hours) + String(":");
+		} else {
+			message += String(hours) + String(":");
+		}
 	}
-  }
 
-  // Add leading "0" to all minutes between 0-10
-  if (minute() < 10) {
-    message += String("0") + String(minutes);
-    } else {
+	// Add leading "0" to all minutes between 0-10
+	if (minute() < 10) {
+		message += String("0") + String(minutes);
+	} else {
 		message += String(minutes);
-  }
+	}
   
-  message += String(ampm) + " " + String(months) + "/" + String(dates) + "/" + String(years);
-    
-  Serial.println(message);
+	message += String(ampm) + " " + String(months) + "/" + String(dates) + "/" + String(years);
+	
+	Serial.println(message);
  
-  tweet(message);
+	tweet(message);
   
-  //Specify time between tweets (Default 1 hour)
-  delay(3600000);
+	//Specify time between tweets (Default 1 hour)
+	delay(3600000);
 }
 
 // Send a tweet
 void tweet(String message) {
-  char msg[140] = "";
-  message.toCharArray(msg, 140);
-  Serial.println("Connecting to Twitter ...");
-  if (twitter.post(msg)) {
-    int status = twitter.wait();
-    if (status == 200) {
-      Serial.println("Post Tweet: Success.");
-    } else {
-      Serial.print("Post Tweet: Failed - code ");
-      Serial.println(status);
-    }
-  } else {
-    Serial.println("Connect to Twitter: Failed.");
-    
-	// Retry if connection fails (Default 3 mintues)
-    Serial.println("Connect to Twitter: Retrying in 3 minutes.");
-    delay(180000);
-    if (twitter.post(msg)) {
-      int status = twitter.wait();
-      if (status == 200) {
-        Serial.println("Post Tweet: Success.");
-      } else {
-        Serial.print("Post Tweet: Failed - code ");
-        Serial.println(status);
-      }
-    }  
-  }
+	char msg[140] = "";
+	message.toCharArray(msg, 140);
+	Serial.println("Connecting to Twitter ...");
+	if (twitter.post(msg)) {
+		int status = twitter.wait();
+		if (status == 200) {
+			Serial.println("Post Tweet: Success.");
+		} else {
+			Serial.print("Post Tweet: Failed - code ");
+			Serial.println(status);
+		}
+	} else {
+		Serial.println("Connect to Twitter: Failed.");
+	
+		// Retry if connection fails (Default 3 mintues)
+		Serial.println("Connect to Twitter: Retrying in 3 minutes.");
+		delay(180000);
+		if (twitter.post(msg)) {
+			int status = twitter.wait();
+			if (status == 200) {
+				Serial.println("Post Tweet: Success.");
+			} else {
+				Serial.print("Post Tweet: Failed - code ");
+				Serial.println(status);
+			}
+		}  
+	}
 }
