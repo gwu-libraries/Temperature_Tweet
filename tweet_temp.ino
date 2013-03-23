@@ -9,14 +9,12 @@
 #include <Time.h>
 
 // Celsius to Fahrenheit conversion
-double Fahrenheit(double celsius)
-{
+double Fahrenheit(double celsius) {
 	return 1.8 * celsius + 32;
 }
 
 // Fast integer version with rounding
-// int Celcius2Fahrenheit(int celcius)
-//{
+// int Celcius2Fahrenheit(int celcius) {
 //  return (celsius * 18 + 5)/10 + 32;
 //}
 
@@ -55,19 +53,18 @@ Twitter twitter("");
 dht11 DHT11;
 #define DHT11PIN 2
 
-void setup()
-{
+void setup() {
   int i = 0;
   // Open a serial port and wait for it to be ready  
   Serial.begin(9600);
   delay(5000);
   // Setup ethernet access (MAC address is all that is neccesary if using DHCP)
   Ethernet.begin(mac);
-   // Try to get the date and time from NTP server
-   int trys=0;
-   while(!getTimeAndDate() && trys<10) {
-     trys++;
-   }
+  // Try to get the date and time from NTP server
+  int trys=0;
+  while(!getTimeAndDate() && trys<10) {
+	trys++;
+  }
 }
 
 // Do not alter this function, it is used by the system
@@ -76,7 +73,7 @@ int getTimeAndDate() {
    Udp.begin(localPort);
    sendNTPpacket(timeServer);
    delay(1000);
-   if (Udp.parsePacket()){
+   if (Udp.parsePacket()) {
      // Read the packet into the buffer
      Udp.read(packetBuffer,NTP_PACKET_SIZE);
      unsigned long highWord, lowWord, epoch;
@@ -92,8 +89,7 @@ int getTimeAndDate() {
 }
 
 // Do not alter this function, it is used by the system
-unsigned long sendNTPpacket(IPAddress& address)
-{
+unsigned long sendNTPpacket(IPAddress& address) {
   memset(packetBuffer, 0, NTP_PACKET_SIZE);
   packetBuffer[0] = 0b11100011;
   packetBuffer[1] = 0;
@@ -109,7 +105,7 @@ unsigned long sendNTPpacket(IPAddress& address)
 }
 
 // Clock display of the time and date (Default output 24H MM/DD/YY - HH:MM:SS)
-void clockDisplay(){
+void clockDisplay() {
   Serial.print(month());
   Serial.print("/");
   Serial.print(day());
@@ -124,20 +120,18 @@ void clockDisplay(){
   Serial.println();
 }
 
-void loop()
-{
+void loop() {
   Serial.println("\n");
 
   // Update the time via NTP server as often as the time you set at the top
   if(now()-ntpLastUpdate > ntpSyncTime) {
     int trys=0;
-    while(!getTimeAndDate() && trys<10){
+    while(!getTimeAndDate() && trys<10) {
       trys++;
     }
-    if(trys<10){
+    if(trys<10) {
       Serial.println("NTP server update: Success.");
-    }
-    else{
+    } else {
       Serial.println("NTP server update: Failed.");
     }
   }
@@ -148,20 +142,19 @@ void loop()
   // Verify the sensor is reading correctly
   int chk = DHT11.read(DHT11PIN);
   Serial.print("Reading sensor: ");
-  switch (chk)
-  {
+  switch (chk) {
     case DHTLIB_OK: 
-		Serial.println("Success."); 
-		break;
+	Serial.println("Success."); 
+	break;
     case DHTLIB_ERROR_CHECKSUM: 
-		Serial.println("Checksum error."); 
-		break;
+	Serial.println("Checksum error."); 
+	break;
     case DHTLIB_ERROR_TIMEOUT: 
-		Serial.println("Time out error."); 
-		break;
+	Serial.println("Time out error."); 
+	break;
     default: 
-		Serial.println("Unknown error."); 
-		break;
+	Serial.println("Unknown error."); 
+	break;
   }
   
   // Display current temperature and humidity
@@ -190,18 +183,16 @@ void loop()
   seconds = second();
   
   // Adjust hours to 12h format
-  if(hour() > 12){
+  if(hour() > 12) {
     hours = hour()-12;
-  }
-  else{
+  } else {
     hours = hour();
   }
  
   // Set AM or PM
-  if (hour() - 12 >= 0){
+  if (hour() - 12 >= 0) {
     ampm = "pm";
-  }
-  else{
+  } else {
     ampm = "am";
   }
   
@@ -211,10 +202,10 @@ void loop()
   message += " percent humidity. -- ";
   
   // Add leading "0" to all hours between 1am-9am, 1pm-9pm, and convert 24:00 to 12:00
-  if (hour() = 00){
+  if (hour() = 00) {
 	message += String("12:");
 	} else {
-		if (hour() - 12 < 10){
+		if (hour() - 12 < 10) {
 		message += String("0") + String(hours) + String(":");
 	} else {
 		message += String(hours) + String(":");
@@ -222,7 +213,7 @@ void loop()
   }
 
   // Add leading "0" to all minutes between 0-10
-  if (minute() < 10){
+  if (minute() < 10) {
     message += String("0") + String(minutes);
     } else {
 		message += String(minutes);
@@ -232,14 +223,14 @@ void loop()
     
   Serial.println(message);
  
-tweet(message);
+  tweet(message);
+  
   //Specify time between tweets (Default 1 hour)
   delay(3600000);
 }
 
 // Send a tweet
-void tweet(String message)
-{
+void tweet(String message) {
   char msg[140] = "";
   message.toCharArray(msg, 140);
   Serial.println("Connecting to Twitter ...");
@@ -253,7 +244,8 @@ void tweet(String message)
     }
   } else {
     Serial.println("Connect to Twitter: Failed.");
-    // Retry if connection fails (Default 3 mintues)
+    
+	// Retry if connection fails (Default 3 mintues)
     Serial.println("Connect to Twitter: Retrying in 3 minutes.");
     delay(180000);
     if (twitter.post(msg)) {
