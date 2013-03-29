@@ -20,20 +20,11 @@ double Fahrenheit(double celsius) {
 
 // Configure ethernet shield network settings ie: DHCP or static IP
 // (Static IP addressing seems to be more reliable)
-// byte mac[] = { 0x90, 0xA2, 0xDA, 0x0D, 0xD1, 0x4F };
-// IP for MAC: 90A2DA0DD14F
-// byte ip[] = { 128, 164, 213, 157 };
-// byte mac[] = { 0x90, 0xA2, 0xDA, 0x0D, 0xD6, 0x38 };
-// IP for MAC: 90A2DA0DD638
-// byte ip[] = { 128, 164, 212, 249 };
-// byte mac[] = { 0x90, 0xA2, 0xDA, 0x0D, 0xD1, 0x6C };
-// IP for MAC: 90A2DA0DD16C
-// byte ip[] = { 128, 164, 212, 255 };
-
-// Standard GW network settings
-// byte gateway[] = { 128, 164, 215, 254 };
-// byte subnet[] = { 255, 255, 252, 0 };
-// byte mydns[] = { 128, 164, 141, 11 };
+byte mac[] = { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF };
+byte ip[] = { 0, 0, 0, 0 };
+byte gateway[] = { 0, 0, 0, 0 };
+byte subnet[] = { 0, 0, 0, 0 };
+byte mydns[] = { 0, 0, 0, 0 };
 
 // Local port to listen for UDP packets
 unsigned int localPort = 8888;
