@@ -60,7 +60,7 @@ EthernetUDP Udp;
 unsigned long ntpLastUpdate = 0;
 
 // Your token to tweet (get it from http://arduino-tweet.appspot.com/)
-Twitter twitter("1281246518-AgIZOCFVZ6U16IA2AgU7E3Xd1DV5scWklOTz9ik");
+Twitter twitter("");
 
 // Set the sensor up
 dht11 DHT11;
