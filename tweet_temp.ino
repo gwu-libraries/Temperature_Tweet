@@ -215,7 +215,7 @@ void loop() {
 	}
   
 	// Compose the message
-	message = "The Gelman Library third floor is currently: " + String(tempadj); 
+	message = "The temperature is currently: " + String(tempadj); 
 	message += " degrees Fahrenheit with " + String(DHT11.humidity);
 	message += " percent humidity. -- ";
   
